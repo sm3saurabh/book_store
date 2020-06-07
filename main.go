@@ -23,8 +23,8 @@ func getBooks(w http.ResponseWriter, r *http.Request) {
 // Add the book to the in memory list
 // Also returns the new book list
 // TODO - Change it with persistent storage like a db in future
-func addBook(w http.ResponseWriter, r *http.Request) {
-  var book models.Book
+func addBooks(w http.ResponseWriter, r *http.Request) {
+  var book []models.Book
 
   parsingError := json.NewDecoder(r.Body).Decode(&book)
 
@@ -93,7 +93,7 @@ func main() {
   r.Headers("Content-Type", "application/json")
 
   r.HandleFunc("/books", getBooks).Methods("GET")
-  r.HandleFunc("/add", addBook).Methods("POST")
+  r.HandleFunc("/add", addBooks).Methods("POST")
   r.HandleFunc("/update", updateBook).Methods("PUT")
   r.HandleFunc("/delete/{id}", deleteBook).Methods("DELETE")
 
