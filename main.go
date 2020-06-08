@@ -8,11 +8,13 @@ import (
   "encoding/json"
 	"github.com/gorilla/mux"
   models "github.com/sm3saurabh/book_store/models"
+  repo "github.com/sm3saurabh/book_store/repo"
 )
 
+var bookRepo repo.BookRepository
 
 func getBooks(w http.ResponseWriter, r *http.Request) {
-  nonEmptyBooks := models.GetOnlyNonEmptyBooks()
+  nonEmptyBooks := bookRepo.GetOnlyNonEmptyBooks()
   parsingError := json.NewEncoder(w).Encode(nonEmptyBooks)
 
   if parsingError != nil {
@@ -24,16 +26,16 @@ func getBooks(w http.ResponseWriter, r *http.Request) {
 // Also returns the new book list
 // TODO - Change it with persistent storage like a db in future
 func addBooks(w http.ResponseWriter, r *http.Request) {
-  var book []models.Book
+  var books []models.Book
 
-  parsingError := json.NewDecoder(r.Body).Decode(&book)
+  parsingError := json.NewDecoder(r.Body).Decode(&books)
 
   if parsingError != nil {
     http.Error(w, parsingError.Error(), http.StatusBadRequest)
     return
   }
 
-  models.AddBookToList(book)
+  bookRepo.AddBooksToList(books)
 
   getBooks(w, r)
 }
@@ -50,9 +52,9 @@ func updateBook(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  bookIndex := models.UpdateBookInTheList(book)
+  wasPresent := bookRepo.UpdateBookInTheList(book)
 
-  if bookIndex == -1 {
+  if !wasPresent {
     http.Error(w, "Book id entered is not valid", http.StatusBadRequest)
     return
   }
@@ -73,7 +75,7 @@ func deleteBook(w http.ResponseWriter, r *http.Request) {
       return
     }
 
-    wasPresent := models.DeleteBookInTheList(id)
+    wasPresent := bookRepo.DeleteBookInTheList(id)
 
     if !wasPresent {
       http.Error(w, "Invalid id", http.StatusBadRequest)
@@ -87,16 +89,26 @@ func deleteBook(w http.ResponseWriter, r *http.Request) {
   }
 }
 
+func getBookServerRouter() *mux.Router {
+  router := mux.NewRouter()
+
+
+  router.Headers("Content-Type", "application/json")
+
+  router.HandleFunc("/books", getBooks).Methods("GET")
+  router.HandleFunc("/add", addBooks).Methods("POST")
+  router.HandleFunc("/update", updateBook).Methods("PUT")
+  router.HandleFunc("/delete/{id}", deleteBook).Methods("DELETE")
+
+  return router
+}
+
 func main() {
-  r := mux.NewRouter()
+  bookRepo = repo.NewBooksRepository()
 
-  r.Headers("Content-Type", "application/json")
+  router := getBookServerRouter()
 
-  r.HandleFunc("/books", getBooks).Methods("GET")
-  r.HandleFunc("/add", addBooks).Methods("POST")
-  r.HandleFunc("/update", updateBook).Methods("PUT")
-  r.HandleFunc("/delete/{id}", deleteBook).Methods("DELETE")
 
-  log.Fatal(http.ListenAndServe(":8000", r))
+  log.Fatal(http.ListenAndServe(":8000", router))
 }
 
