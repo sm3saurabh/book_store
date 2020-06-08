@@ -69,8 +69,8 @@ func  GetOnlyNonEmptyBooks() (ret []Book) {
 }
 
 // Adds a book to the to the private book list
-func AddBookToList(book Book) {
-  books = append(books, book)
+func AddBookToList(book []Book) {
+  books = append(books, book...)
 }
 
 func UpdateBookInTheList(book Book) int {
