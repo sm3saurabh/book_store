@@ -9,5 +9,6 @@ type BookRepository interface {
   AddBooksToList(books []Book)
   UpdateBookInTheList(book Book) bool
   DeleteBookInTheList(id int) bool
+  SearchBookByTitle(title string) (Book, error)
 }
 
