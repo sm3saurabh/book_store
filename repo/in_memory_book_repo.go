@@ -2,6 +2,7 @@ package repo
 
 import (
 . "github.com/sm3saurabh/book_store/models"
+"errors"
 )
 
 type InMemoryBookRepository struct {
@@ -59,6 +60,16 @@ func (repo *InMemoryBookRepository) DeleteBookInTheList(id int) bool {
   repo.books = repo.books[:length - 1]
 
   return true
+}
+
+func (repo *InMemoryBookRepository) SearchBookByTitle(title string) (Book, error) {
+  for _, book := range repo.books {
+    if (title == book.Title) {
+      return book, nil
+    }
+  }
+
+  return Book{}, errors.New("No book found for the provided title")
 }
 
 var repoSingleton *InMemoryBookRepository = &InMemoryBookRepository {
