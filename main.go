@@ -89,6 +89,20 @@ func deleteBook(w http.ResponseWriter, r *http.Request) {
   }
 }
 
+func searchBook(w http.ResponseWriter, r *http.Request) {
+  bookTitle := r.URL.Query().Get("title")
+
+  book, err := bookRepo.SearchBookByTitle(bookTitle)
+
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusBadRequest)
+    return
+  }
+
+  json.NewEncoder(w).Encode(book)
+
+}
+
 func getBookServerRouter() *mux.Router {
   router := mux.NewRouter()
 
@@ -99,6 +113,7 @@ func getBookServerRouter() *mux.Router {
   router.HandleFunc("/add", addBooks).Methods("POST")
   router.HandleFunc("/update", updateBook).Methods("PUT")
   router.HandleFunc("/delete/{id}", deleteBook).Methods("DELETE")
+  router.HandleFunc("/search", searchBook).Methods("GET")
 
   return router
 }
