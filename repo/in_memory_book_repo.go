@@ -19,6 +19,15 @@ func (repo *InMemoryBookRepository) GetOnlyNonEmptyBooks() (ret []Book) {
   return
 }
 
+func (repo *InMemoryBookRepository) GetBookInPriceRange(lower float64, upper float64) (ret []Book) {
+  for _, book := range repo.books {
+    if book.Price >= lower && book.Price <= upper {
+      ret = append(ret, book)
+    }
+  }
+  return
+}
+
 func (repo *InMemoryBookRepository) AddBooksToList(newBooks []Book) {
   repo.books = append(repo.books, newBooks...)
 }
@@ -87,6 +96,7 @@ func initializeBooks() []Book {
     Title: "Book 1",
     Isbn: 13982,
     Id: 1,
+    Price: 300.00,
     Author: &Author {
       FirstName: "Saurabh",
       LastName: "Mishra",
@@ -95,6 +105,7 @@ func initializeBooks() []Book {
     Title: "Book 2",
     Isbn: 13982,
     Id: 2,
+    Price: 400.00,
     Author: &Author {
       FirstName: "Saurabh",
       LastName: "Mishra",
@@ -103,6 +114,7 @@ func initializeBooks() []Book {
     Title: "Book 3",
     Isbn: 13982,
     Id: 3,
+    Price: 450.00,
     Author: &Author {
       FirstName: "Saurabh",
       LastName: "Mishra",
@@ -111,6 +123,7 @@ func initializeBooks() []Book {
     Title: "Book 4",
     Isbn: 13982,
     Id: 4,
+    Price: 600.00,
     Author: &Author {
       FirstName: "Saurabh",
       LastName: "Mishra",
@@ -119,6 +132,7 @@ func initializeBooks() []Book {
     Title: "Book 5",
     Isbn: 13982,
     Id: 5,
+    Price: 80.00,
     Author: &Author {
       FirstName: "Saurabh",
       LastName: "Mishra",
