@@ -19,6 +19,15 @@ func (repo *InMemoryBookRepository) GetOnlyNonEmptyBooks() (ret []Book) {
   return
 }
 
+func (repo *InMemoryBookRepository) GetBookInPriceRange(lower float64, upper float64) (ret []Book) {
+  for _, book := range repo.books {
+    if book.Price <= lower && book.Price >= upper {
+      ret = append(ret, book)
+    }
+  }
+  return
+}
+
 func (repo *InMemoryBookRepository) AddBooksToList(newBooks []Book) {
   repo.books = append(repo.books, newBooks...)
 }
