@@ -22,6 +22,49 @@ func getBooks(w http.ResponseWriter, r *http.Request) {
   }
 }
 
+func getBooksInPriceRange(w http.ResponseWriter, r *http.Request) {
+  u := r.URL.Query().Get("upper")
+  l := r.URL.Query().Get("lower")
+
+  var lower, upper float64
+
+  if len(u) == 0 {
+    upper = 5000
+  } else {
+    var err error
+    upper, err =  strconv.ParseFloat(u, 64)
+
+    if err != nil {
+      http.Error(w, err.Error(), http.StatusInternalServerError)
+      return
+    }
+  }
+
+  if len(l) == 0 {
+    lower = 0
+  } else {
+    var err error
+    lower, err = strconv.ParseFloat(l, 64)
+
+    if err != nil {
+      http.Error(w, err.Error(), http.StatusInternalServerError)
+      return
+    }
+  }
+
+  books := bookRepo.GetBookInPriceRange(lower, upper)
+
+  if len(books) == 0 {
+    json.NewEncoder(w).Encode("Could not return books for the given price range")
+  } else {
+    err := json.NewEncoder(w).Encode(books)
+
+    if err != nil {
+      http.Error(w, err.Error(), http.StatusInternalServerError)
+    }
+  }
+}
+
 // Add the book to the in memory list
 // Also returns the new book list
 // TODO - Change it with persistent storage like a db in future
@@ -114,6 +157,7 @@ func getBookServerRouter() *mux.Router {
   router.HandleFunc("/update", updateBook).Methods("PUT")
   router.HandleFunc("/delete/{id}", deleteBook).Methods("DELETE")
   router.HandleFunc("/search", searchBook).Methods("GET")
+  router.HandleFunc("/range", getBooksInPriceRange).Methods("GET")
 
   return router
 }
