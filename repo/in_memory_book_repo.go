@@ -73,12 +73,22 @@ func (repo *InMemoryBookRepository) DeleteBookInTheList(id int) bool {
 
 func (repo *InMemoryBookRepository) SearchBookByTitle(title string) (Book, error) {
   for _, book := range repo.books {
-    if (title == book.Title) {
+    if title == book.Title {
       return book, nil
     }
   }
 
   return Book{}, errors.New("No book found for the provided title")
+}
+
+func (repo *InMemoryBookRepository) GetBooksInGenre(genre string) (ret []Book) {
+  for _, book := range repo.books {
+    if genre == book.Genre {
+      ret = append(ret, book)
+    }
+  }
+
+  return
 }
 
 var repoSingleton *InMemoryBookRepository = &InMemoryBookRepository {
