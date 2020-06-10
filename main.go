@@ -2,7 +2,6 @@ package main
 
 
 import (
-  "fmt"
   "log"
   "strconv"
   "net/http"
@@ -73,7 +72,11 @@ func getBooksInGenre(w http.ResponseWriter, r *http.Request) {
     genreBooks := bookRepo.GetBooksInGenre(genre)
 
     if len(genreBooks) == 0 {
-      fmt.Fprintf(w, "Invalid genre or no books found")
+      err := json.NewEncoder(w).Encode("Invalid genre or books not found")
+
+      if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+      }
     }
 
     err := json.NewEncoder(w).Encode(genreBooks)
