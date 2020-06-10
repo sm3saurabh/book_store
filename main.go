@@ -2,6 +2,7 @@ package main
 
 
 import (
+  "fmt"
   "log"
   "strconv"
   "net/http"
@@ -58,6 +59,24 @@ func getBooksInPriceRange(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode("Could not return books for the given price range")
   } else {
     err := json.NewEncoder(w).Encode(books)
+
+    if err != nil {
+      http.Error(w, err.Error(), http.StatusInternalServerError)
+    }
+  }
+}
+
+func getBooksInGenre(w http.ResponseWriter, r *http.Request) {
+  params := mux.Vars(r)
+
+  if genre, ok := params["genre"]; ok {
+    genreBooks := bookRepo.GetBooksInGenre(genre)
+
+    if len(genreBooks) == 0 {
+      fmt.Fprintf(w, "Invalid genre or no books found")
+    }
+
+    err := json.NewEncoder(w).Encode(genreBooks)
 
     if err != nil {
       http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -158,6 +177,7 @@ func getBookServerRouter() *mux.Router {
   router.HandleFunc("/delete/{id}", deleteBook).Methods("DELETE")
   router.HandleFunc("/search", searchBook).Methods("GET")
   router.HandleFunc("/range", getBooksInPriceRange).Methods("GET")
+  router.HandleFunc("/books/{genre}", getBooksInGenre).Methods("GET")
 
   return router
 }
