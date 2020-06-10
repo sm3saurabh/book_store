@@ -3,6 +3,7 @@ package repo
 import (
 . "github.com/sm3saurabh/book_store/models"
 "errors"
+"strings"
 )
 
 type InMemoryBookRepository struct {
@@ -83,7 +84,7 @@ func (repo *InMemoryBookRepository) SearchBookByTitle(title string) (Book, error
 
 func (repo *InMemoryBookRepository) GetBooksInGenre(genre string) (ret []Book) {
   for _, book := range repo.books {
-    if genre == book.Genre {
+    if strings.EqualFold(book.Genre, genre) {
       ret = append(ret, book)
     }
   }
