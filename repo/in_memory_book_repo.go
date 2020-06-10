@@ -3,6 +3,7 @@ package repo
 import (
 . "github.com/sm3saurabh/book_store/models"
 "errors"
+"strings"
 )
 
 type InMemoryBookRepository struct {
@@ -73,12 +74,22 @@ func (repo *InMemoryBookRepository) DeleteBookInTheList(id int) bool {
 
 func (repo *InMemoryBookRepository) SearchBookByTitle(title string) (Book, error) {
   for _, book := range repo.books {
-    if (title == book.Title) {
+    if title == book.Title {
       return book, nil
     }
   }
 
   return Book{}, errors.New("No book found for the provided title")
+}
+
+func (repo *InMemoryBookRepository) GetBooksInGenre(genre string) (ret []Book) {
+  for _, book := range repo.books {
+    if strings.EqualFold(book.Genre, genre) {
+      ret = append(ret, book)
+    }
+  }
+
+  return
 }
 
 var repoSingleton *InMemoryBookRepository = &InMemoryBookRepository {
@@ -97,6 +108,7 @@ func initializeBooks() []Book {
     Isbn: 13982,
     Id: 1,
     Price: 300.00,
+    Genre: "SciFi",
     Author: &Author {
       FirstName: "Saurabh",
       LastName: "Mishra",
@@ -106,6 +118,7 @@ func initializeBooks() []Book {
     Isbn: 13982,
     Id: 2,
     Price: 400.00,
+    Genre: "SciFi",
     Author: &Author {
       FirstName: "Saurabh",
       LastName: "Mishra",
@@ -115,6 +128,7 @@ func initializeBooks() []Book {
     Isbn: 13982,
     Id: 3,
     Price: 450.00,
+    Genre: "Biography",
     Author: &Author {
       FirstName: "Saurabh",
       LastName: "Mishra",
@@ -124,6 +138,7 @@ func initializeBooks() []Book {
     Isbn: 13982,
     Id: 4,
     Price: 600.00,
+    Genre: "Mystery",
     Author: &Author {
       FirstName: "Saurabh",
       LastName: "Mishra",
@@ -133,6 +148,7 @@ func initializeBooks() []Book {
     Isbn: 13982,
     Id: 5,
     Price: 80.00,
+    Genre: "Drama",
     Author: &Author {
       FirstName: "Saurabh",
       LastName: "Mishra",

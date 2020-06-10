@@ -6,6 +6,7 @@ type Book struct {
   Isbn int `json:"isbn"`
   Id int `json:"id"`
   Price float64 `json:"price"`
+  Genre string `json:"genre"`
   Author *Author `json:"author"`
 }
 

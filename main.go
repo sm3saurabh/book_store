@@ -65,6 +65,29 @@ func getBooksInPriceRange(w http.ResponseWriter, r *http.Request) {
   }
 }
 
+func getBooksInGenre(w http.ResponseWriter, r *http.Request) {
+  params := mux.Vars(r)
+
+  if genre, ok := params["genre"]; ok {
+    genreBooks := bookRepo.GetBooksInGenre(genre)
+
+    if len(genreBooks) == 0 {
+      err := json.NewEncoder(w).Encode("Invalid genre or books not found")
+
+      if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+      }
+      return
+    }
+
+    err := json.NewEncoder(w).Encode(genreBooks)
+
+    if err != nil {
+      http.Error(w, err.Error(), http.StatusInternalServerError)
+    }
+  }
+}
+
 // Add the book to the in memory list
 // Also returns the new book list
 // TODO - Change it with persistent storage like a db in future
@@ -158,6 +181,7 @@ func getBookServerRouter() *mux.Router {
   router.HandleFunc("/delete/{id}", deleteBook).Methods("DELETE")
   router.HandleFunc("/search", searchBook).Methods("GET")
   router.HandleFunc("/range", getBooksInPriceRange).Methods("GET")
+  router.HandleFunc("/books/{genre}", getBooksInGenre).Methods("GET")
 
   return router
 }

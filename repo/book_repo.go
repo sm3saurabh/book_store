@@ -17,5 +17,7 @@ type BookRepository interface {
   DeleteBookInTheList(id int) bool
   // Search book by title in the list of book
   SearchBookByTitle(title string) (Book, error)
+  // Get all the books in a genre
+  GetBooksInGenre(genre string) (ret []Book)
 }
 
