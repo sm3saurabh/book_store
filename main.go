@@ -8,7 +8,7 @@ import (
   "encoding/json"
   "github.com/gorilla/mux"
   models "github.com/sm3saurabh/book_store/models"
-  repo "github.com/sm3saurabh/book_store/repo"
+  repo "github.com/sm3saurabh/book_store/repo/book"
 )
 
 var bookRepo repo.BookRepository

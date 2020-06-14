@@ -1,4 +1,4 @@
-package repo
+package book
 
 import(
   . "github.com/sm3saurabh/book_store/models"

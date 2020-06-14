@@ -1,4 +1,4 @@
-package repo
+package book
 
 import (
 . "github.com/sm3saurabh/book_store/models"
@@ -110,8 +110,8 @@ func initializeBooks() []Book {
     Price: 300.00,
     Genre: "SciFi",
     Author: &Author {
-      FirstName: "Saurabh",
-      LastName: "Mishra",
+      Name: "Saurabh Mishra",
+      Id: 1,
     },
   }, Book {
     Title: "Book 2",
@@ -120,8 +120,8 @@ func initializeBooks() []Book {
     Price: 400.00,
     Genre: "SciFi",
     Author: &Author {
-      FirstName: "Saurabh",
-      LastName: "Mishra",
+      Name: "Saurabh Mishra",
+      Id: 1,
     },
   }, Book {
     Title: "Book 3",
@@ -130,8 +130,8 @@ func initializeBooks() []Book {
     Price: 450.00,
     Genre: "Biography",
     Author: &Author {
-      FirstName: "Saurabh",
-      LastName: "Mishra",
+      Name: "Saurabh Mishra",
+      Id: 1,
     },
   }, Book {
     Title: "Book 4",
@@ -140,8 +140,8 @@ func initializeBooks() []Book {
     Price: 600.00,
     Genre: "Mystery",
     Author: &Author {
-      FirstName: "Saurabh",
-      LastName: "Mishra",
+      Name: "Saurabh Mishra",
+      Id: 1,
     },
   }, Book {
     Title: "Book 5",
@@ -150,8 +150,8 @@ func initializeBooks() []Book {
     Price: 80.00,
     Genre: "Drama",
     Author: &Author {
-      FirstName: "Saurabh",
-      LastName: "Mishra",
+      Name: "Saurabh Mishra",
+      Id: 1,
     },
   })
   return books
