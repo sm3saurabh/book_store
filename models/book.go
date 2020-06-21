@@ -10,9 +10,3 @@ type Book struct {
   PublishedAt uint64 `json:"published_at"`
   Author *Author `json:"author"`
 }
-
-
-type Author struct {
-  FirstName string `json:"firstname"`
-  LastName string `json:"lastname"`
-}
