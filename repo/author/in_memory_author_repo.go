@@ -101,6 +101,10 @@ var authorRepoSingleton *InMemoryAuthorRepository = &InMemoryAuthorRepository {
   authors: initializeAuthors(),
 }
 
+func NewInMemoryAuthorRepository() *InMemoryAuthorRepository {
+  return authorRepoSingleton
+}
+
 func initializeAuthors() (ret []Author) {
   ret = append(ret, Author{
     Name: "Saurabh Mishra",
