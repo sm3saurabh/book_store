@@ -15,6 +15,7 @@ func getBookServerRouter() *mux.Router {
 
   // Let the dedicated handler handle define all the end points
   handlers.HanldeBookRequests(router)
+  handlers.HandleAuthorRequests(router)
 
 
   return router
