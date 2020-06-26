@@ -1,11 +1,11 @@
 package author
 
 
-import(
-  "sort"
-  "errors"
-  "strings"
-  . "github.com/sm3saurabh/book_store/models"
+import (
+	"errors"
+	"sort"
+	"strings"
+	. "github.com/sm3saurabh/book_store/models"
 )
 
 type InMemoryAuthorRepository struct {
@@ -25,10 +25,10 @@ func (repo *InMemoryAuthorRepository) GetOnlyNonEmptyAuthors() (ret AuthorList) 
 func (repo *InMemoryAuthorRepository) GetAuthorById(id uint32) (Author, error) {
 
   index := sort.Search(len(repo.authors), func (i int) bool {
-    return repo.authors[i].Id == id
+    return repo.authors[i].Id >= id
   })
 
-  if index != -1 {
+  if index != len(repo.authors) {
     return repo.authors[index], nil
   } else {
     return repo.GetEmptyAuthor(), errors.New("Could not find author for the given id")
