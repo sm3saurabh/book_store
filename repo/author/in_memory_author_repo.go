@@ -51,6 +51,9 @@ func (repo *InMemoryAuthorRepository) AddAuthor(author Author) error {
     return errors.New("This author is already present. Could not add to the list")
   }
 
+  // Make the current length of author list as the new author's id
+  author.Id = uint32(len(repo.authors) + 1)
+
   repo.authors = append(repo.authors, author)
 
   return nil
