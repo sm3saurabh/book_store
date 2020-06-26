@@ -1,11 +1,11 @@
 package author
 
 
-import(
-  "sort"
-  "errors"
-  "strings"
-  . "github.com/sm3saurabh/book_store/models"
+import (
+	"errors"
+	"sort"
+	"strings"
+	. "github.com/sm3saurabh/book_store/models"
 )
 
 type InMemoryAuthorRepository struct {
@@ -25,10 +25,10 @@ func (repo *InMemoryAuthorRepository) GetOnlyNonEmptyAuthors() (ret AuthorList) 
 func (repo *InMemoryAuthorRepository) GetAuthorById(id uint32) (Author, error) {
 
   index := sort.Search(len(repo.authors), func (i int) bool {
-    return repo.authors[i].Id == id
+    return repo.authors[i].Id >= id
   })
 
-  if index != -1 {
+  if index != len(repo.authors) {
     return repo.authors[index], nil
   } else {
     return repo.GetEmptyAuthor(), errors.New("Could not find author for the given id")
@@ -51,6 +51,9 @@ func (repo *InMemoryAuthorRepository) AddAuthor(author Author) error {
     return errors.New("This author is already present. Could not add to the list")
   }
 
+  // Make the current length of author list as the new author's id
+  author.Id = uint32(len(repo.authors) + 1)
+
   repo.authors = append(repo.authors, author)
 
   return nil
@@ -67,6 +70,7 @@ func (repo *InMemoryAuthorRepository) UpdateAuthor(author Author) error {
 
   if authorIndex != -1 {
     repo.authors[authorIndex] = author
+    return nil
   }
 
   return errors.New("This author does not exist")
@@ -87,6 +91,7 @@ func (repo *InMemoryAuthorRepository) DeleteAuthor(author Author) error {
     repo.authors[authorIndex] = repo.authors[length - 1]
     repo.authors[length - 1] = repo.GetEmptyAuthor()
     repo.authors = repo.authors[:length - 1]
+    return nil
   }
 
   return errors.New("This author does not exist")
