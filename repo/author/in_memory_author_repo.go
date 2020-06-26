@@ -70,6 +70,7 @@ func (repo *InMemoryAuthorRepository) UpdateAuthor(author Author) error {
 
   if authorIndex != -1 {
     repo.authors[authorIndex] = author
+    return nil
   }
 
   return errors.New("This author does not exist")
@@ -90,6 +91,7 @@ func (repo *InMemoryAuthorRepository) DeleteAuthor(author Author) error {
     repo.authors[authorIndex] = repo.authors[length - 1]
     repo.authors[length - 1] = repo.GetEmptyAuthor()
     repo.authors = repo.authors[:length - 1]
+    return nil
   }
 
   return errors.New("This author does not exist")
