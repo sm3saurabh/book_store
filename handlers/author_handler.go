@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"github.com/gorilla/mux"
 	repo "github.com/sm3saurabh/book_store/repo/author"
+  models "github.com/sm3saurabh/book_store/models"
 )
 
 var authorRepo repo.AuthorRepository
@@ -15,6 +16,7 @@ func HandleAuthorRequests(router *mux.Router) {
 
   router.HandleFunc("/authors", getAuthors).Methods("GET")
   router.HandleFunc("/authors/{name}", getAuthorsByName).Methods("GET")
+  router.HandleFunc("/author", addAuthor).Methods("POST")
   router.HandleFunc("/author/{id}", getAuthorById).Methods("GET")
 }
 
@@ -62,6 +64,26 @@ func getAuthorsByName(w http.ResponseWriter, r *http.Request) {
       http.Error(w, parsingError.Error(), http.StatusInternalServerError)
     }
   }
+}
+
+func addAuthor(w http.ResponseWriter, r *http.Request) {
+  var author models.Author
+
+  parsingError := json.NewDecoder(r.Body).Decode(&author)
+
+  if parsingError != nil {
+    http.Error(w, "Unsupported format", http.StatusBadRequest)
+    return
+  }
+
+  err := authorRepo.AddAuthor(author)
+
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+
+  getAuthors(w, r)
 }
 
 func getAuthors(w http.ResponseWriter, r *http.Request) {
