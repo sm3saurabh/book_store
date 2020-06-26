@@ -14,6 +14,7 @@ func HandleAuthorRequests(router *mux.Router) {
   authorRepo = repo.NewInMemoryAuthorRepository()
 
   router.HandleFunc("/authors", getAuthors).Methods("GET")
+  router.HandleFunc("/authors/{name}", getAuthorsByName).Methods("GET")
   router.HandleFunc("/author/{id}", getAuthorById).Methods("GET")
 }
 
@@ -36,7 +37,30 @@ func getAuthorById(w http.ResponseWriter, r *http.Request) {
       return
     }
 
-    json.NewEncoder(w).Encode(author)
+    parsingError := json.NewEncoder(w).Encode(author)
+
+    if parsingError != nil {
+      http.Error(w, parsingError.Error(), http.StatusInternalServerError)
+    }
+  }
+}
+
+func getAuthorsByName(w http.ResponseWriter, r *http.Request) {
+  params := mux.Vars(r)
+
+  if name, ok := params["name"]; ok {
+    authors := authorRepo.GetAuthorsMatchingName(name)
+
+    if len(authors) == 0 {
+      http.Error(w, "No authors matching the name", http.StatusNotFound)
+      return
+    }
+
+    parsingError := json.NewEncoder(w).Encode(authors)
+
+    if parsingError != nil {
+      http.Error(w, parsingError.Error(), http.StatusInternalServerError)
+    }
   }
 }
 
